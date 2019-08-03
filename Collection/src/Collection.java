@@ -1,15 +1,35 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
+
 import static java.nio.charset.Charset.defaultCharset;
 
 // 61130701107
 public class Collection  {
+
+    public static class HashTime {
+
+        private String hashName;
+        private double time;
+
+        public  HashTime(String name, double time) {
+            this.hashName = name;
+            this.time = time;
+        }
+
+        public String getName() {
+            return hashName;
+        }
+
+        public double getTime() {
+            return time;
+        }
+    }
+
     private List<String> lists;
+
+    private List<HashTime> listTime;
 
     private void getList() throws IOException  {
         this.lists = Files.readAllLines(Paths.get("src/sale.txt"), defaultCharset());
@@ -18,11 +38,19 @@ public class Collection  {
     public static void main(String[] args) throws IOException  {
         // write your code here
         Collection coll = new Collection();
+        coll.listTime = new ArrayList<>();
         coll.getList();
 
         coll.hashMap();
         coll.linkedHashMap();
         coll.treeMap();
+
+        HashTime minTime =  Collections.min(coll.listTime, Comparator.comparing(s -> s.getTime()));
+        System.out.println("Minimum time is " + minTime.getName() + " with time " + minTime.getTime() + " seconds");
+
+
+        HashTime maxTime =  Collections.max(coll.listTime, Comparator.comparing(s -> s.getTime()));
+        System.out.println("Maximum time is " + maxTime.getName() + " with time " + maxTime.getTime() + " seconds");
     }
 
     protected void hashMap() {
@@ -41,9 +69,10 @@ public class Collection  {
         }
 
         long endTime = System.nanoTime();
-        double diffTime = getDiffTime(startTime, endTime);
+        double hashMapTime = getDiffTime(startTime, endTime);
 
-        System.out.println("HashMap Diff Time: " + diffTime + " seconds");
+
+        listTime.add(new HashTime("hashMap", hashMapTime));
     }
 
     private void linkedHashMap() {
@@ -62,9 +91,10 @@ public class Collection  {
         }
 
         long endTime = System.nanoTime();
-        double diffTime = getDiffTime(startTime, endTime);
+        double linkedHashMapTime = getDiffTime(startTime, endTime);
 
-        System.out.println("LinkedHashMap Diff Time: " + diffTime + " seconds");
+        listTime.add(new HashTime("linkedHashMap", linkedHashMapTime));
+
     }
 
     private void treeMap() {
@@ -83,9 +113,9 @@ public class Collection  {
         }
 
         long endTime = System.nanoTime();
-        double diffTime = getDiffTime(startTime, endTime);
+        double treeMapTime = getDiffTime(startTime, endTime);
 
-        System.out.println("TreeMap Diff Time: " + diffTime + " seconds");
+        listTime.add(new HashTime("treeMap", treeMapTime));
     }
 
 
